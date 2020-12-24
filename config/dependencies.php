@@ -46,6 +46,18 @@ $container['notFoundHandler'] = function ($c) {
     };
 };
 
+$c['errorHandler'] = function ($c) {
+    return function ($request, $response, $exception) use ($c) {
+        $data = [
+            "status" => '500',
+            "msg"=>"Ocorreu um erro interno"
+        ];
+        return $c['response']
+            ->withStatus(405)
+            ->withJson($data);
+    };
+};
+
 //Personal not allowed handler
 $container['notAllowedHandler'] = function ($c) {
     return function ($request, $response, $methods) use ($c) {

@@ -14,14 +14,9 @@ date_default_timezone_set('America/Sao_Paulo');
 return [
     'settings' => [
         'secret_key'=>'8969deb149890e9fc5c1cb53b670a364fe5359d3', //Secret key to generate JWT Token
-        'public_paths'=>['/api/token','/api/user'], //Public routes in array()
+        'public_paths'=>['/','/token','/user/create','/news'], //Public routes in array()
         'displayErrorDetails' => true, // set to false in production
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
-
-        // Renderer settings
-        'renderer' => [
-            'template_path' => __DIR__ . '/../templates/',
-        ],
 
         // Monolog settings
         'logger' => [
@@ -33,7 +28,7 @@ return [
         'db' => [
             'driver' => 'mysql',
             'host' => 'localhost',
-            'database' => 'api',
+            'database' => 'grandcursos',
             'username' => 'root',
             'password' => '',
             'charset'   => 'utf8',

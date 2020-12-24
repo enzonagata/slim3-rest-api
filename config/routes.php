@@ -9,8 +9,14 @@
  */
 
 
-$app->post('/api/token', 'App\Controllers\UsersController:token');
+$app->post('/token', 'App\Controllers\UsersController:token');
 
-$app->post('/api/user', 'App\Controllers\UsersController:user'); //User Insert
-$app->put('/api/user', 'App\Controllers\UsersController:user'); //User update
+$app->post('/user/create', 'App\Controllers\UsersController:user'); //User Insert
+$app->put('/user/create', 'App\Controllers\UsersController:user'); //User update
+
+
+$app->get('/', 'App\Controllers\UsersController:index');
+
+$app->get('/news', 'App\Controllers\ApiController:news');
+$app->get('/agenda', 'App\Controllers\ApiController:agenda');
 

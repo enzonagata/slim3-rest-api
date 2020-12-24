@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Token authentication using JWT (Json Web Tokens), with configuration of public routes and routes that require authentication.
  *
@@ -50,7 +51,6 @@ class TokenAuth
         } else {
             return $this->AuthToken($req, $res, $next);
         }
-
     }
 
     public function AuthToken($req, $res, $next)
@@ -59,19 +59,24 @@ class TokenAuth
         $tokenAuth = $req->getHeader('Authorization');
         $tokenAuth = getBearerToken($tokenAuth[0]);
 
-        try {
-            $decoded = JWT::decode($tokenAuth, $this->secret_key, array('HS256'));
-            return $res->withStatus(200)->withJson($decoded);
-        } catch (\Firebase\JWT\ExpiredException $e) {
+        if (isset($tokenAuth) and $tokenAuth !='undefined') {
+            try {
+                $decoded = JWT::decode($tokenAuth, $this->secret_key, array('HS256'));
+                return $next($req, $res);
+                //return $res->withStatus(200)->withJson($decoded);
+                //return $res->$next;
+            } catch (\Firebase\JWT\ExpiredException $e) {
+                $json = [
+                    'code' => '401',
+                    'error' => $e
+                ];
+                return $res->withStatus(401)->withJson($json);
+            }
+        } else {
             $json = [
                 'code' => '401',
-                'error' => $e
             ];
             return $res->withStatus(401)->withJson($json);
         }
-
-
-
     }
-
 }

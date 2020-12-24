@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Token authentication using JWT (Json Web Tokens), with configuration of public routes and routes that require authentication.
  *
@@ -29,6 +30,15 @@ class UsersController extends AppController
     }
 
     /*
+    * Página inicial de apresentação da API
+    */
+    public function index(Request $req, Response $res)
+    {
+        $body = $res->getBody();
+        $body->write('REST Api - Grand Cursos On-line');
+    }
+
+    /*
    * Gerar token de acesso
    * */
     public function token(Request $req, Response $res, $next)
@@ -53,7 +63,7 @@ class UsersController extends AppController
                 "id_user" => $user->getAttribute('id'),
                 "user" => $user->getAttribute('username'),
                 "ini" => $time->getTimestamp(),
-                "exp" => $time->modify("+1 day")->getTimestamp()
+                "exp" => $time->modify("+1 minutes")->getTimestamp()
             );
 
             //Validação do token existente
@@ -81,7 +91,6 @@ class UsersController extends AppController
             ];
 
             return $res->withStatus(200)->withJson($json);
-
         } else {
             $json = [
                 'code' => '401',
@@ -89,7 +98,6 @@ class UsersController extends AppController
             ];
             return $res->withStatus(401)->withJson($json);
         }
-
     }
 
     public function token_validate($token, $key)
@@ -100,25 +108,24 @@ class UsersController extends AppController
         } catch (\Firebase\JWT\ExpiredException $e) {
             return false;
         }
-
     }
 
     //Insert new user
-    public function user(Request $request, Response $response, $args)
+    public function user(Request $req, Response $res, $args)
     {
-        $post = $request->getParams();
+
+        $post = $req->getParsedBody();
+
         $options = [
             'salt' => random_bytes(22),
         ];
-
         $id = $post['id'];
         $name = $post['name'];
         $username = $post['username'];
         $password = $post['password'];
         $pwd_hash = password_hash($password, PASSWORD_BCRYPT, $options);
 
-        if ($request->isPost()) {
-
+        if ($req->isPost()) {
             //Insere o usuario novo
             $user = new Users;
             $user->makeHidden('password');
@@ -126,20 +133,13 @@ class UsersController extends AppController
             $user->username = $username;
             $user->password = $pwd_hash;
             $user->save();
-
-        } else if ($request->isPut()) {
-
+        } else if ($req->isPut()) {
             $data = [
                 'name' => $name,
                 'password' => $pwd_hash
             ];
-
             $user = Users::where('id', $id)->update($data);
-
-
         }
-
-
-        return $response->withJson($user);
+        return $res->withJson($user);
     }
 }
