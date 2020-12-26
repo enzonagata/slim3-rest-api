@@ -12,11 +12,11 @@
 namespace App\Controllers;
 
 use App\AppController;
-use Illuminate\Database\Eloquent\Model;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use App\Models\Users;
-use Firebase\JWT\JWT;
+
+use App\Models\News;
+use App\Models\Agenda;
 
 class ApiController extends AppController
 {
@@ -29,31 +29,13 @@ class ApiController extends AppController
 
     public function news(Request $req, Response $res)
     {
-
-        $json = [
-
-            [
-                'news_id' => '1',
-                'news_title'  => 'Teste',
-                'news_content' => 'Generated content'
-            ]
-        ];
-
+        $json = News::get();
         return $res->withStatus(200)->withJson($json);
     }
 
     public function agenda(Request $req, Response $res)
     {
-
-        $json = [
-
-            [
-                'news_id' => '1',
-                'news_title'  => 'Teste',
-                'news_content' => 'Generated content'
-            ]
-        ];
-
+        $json = Agenda::get();
         return $res->withStatus(200)->withJson($json);
     }
 }

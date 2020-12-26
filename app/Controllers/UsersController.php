@@ -59,11 +59,13 @@ class UsersController extends AppController
         //Se a senha for válida
         if ($password_verify) {
 
+            
+
             $token_options = array(
                 "id_user" => $user->getAttribute('id'),
                 "user" => $user->getAttribute('username'),
                 "ini" => $time->getTimestamp(),
-                "exp" => $time->modify("+1 minutes")->getTimestamp()
+                "exp" => $time->modify("+1 day")->getTimestamp()
             );
 
             //Validação do token existente
